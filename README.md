@@ -4,4 +4,4 @@ Chatter is a chat room web app built with Nodejs, Express, SocketIO, HTML, CSS, 
 
 Deployed at https://jxu-chatter.herokuapp.com/.
 
-![](Chatter.gif)
+![](chatterdemo.gif)
