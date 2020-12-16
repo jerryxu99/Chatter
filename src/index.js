@@ -24,12 +24,11 @@ const publicDirectoryPath = path.join(__dirname, '../public');
 
 app.use(express.static(publicDirectoryPath));
 
-let count = 0;
-
 io.on('connection', (socket) => {
   console.log('New WebSocket connection');
 
   socket.on('join', (options, callback) => {
+    // tries add user to users array
     const { user, error } = addUser({ id: socket.id, ...options });
 
     if (error) {
@@ -46,6 +45,7 @@ io.on('connection', (socket) => {
         generateSystemMessage(`${user.username} has joined!`),
       );
 
+    // Refresh sidebar for all room members
     io.to(user.room).emit('roomData', {
       room: user.room,
       users: getUsersInRoom(user.room),
@@ -55,6 +55,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('sendMessage', (message, callback) => {
+    // Filters the message then emits new message to users in room
     const user = getUser(socket.id);
     const filter = new Filter();
 
@@ -67,6 +68,7 @@ io.on('connection', (socket) => {
   });
 
   socket.on('sendLocation', ({ latitude, longitude }, callback) => {
+    // emits location message to users in room
     const user = getUser(socket.id);
 
     io.to(user.room).emit(
@@ -88,6 +90,7 @@ io.on('connection', (socket) => {
         'systemMessage',
         generateSystemMessage(`${user.username} has left the room.`),
       );
+      // Update sidebar
       io.to(user.room).emit('roomData', {
         room: user.room,
         users: getUsersInRoom(user.room),

@@ -17,7 +17,7 @@ const locationMessageTemplate = document.querySelector(
 ).innerHTML;
 const sidebarTemplate = document.querySelector('#sidebar-template').innerHTML;
 
-// Options
+// Options | location.search comes from index.html form
 const { username, room } = Qs.parse(location.search, {
   ignoreQueryPrefix: true,
 });
@@ -131,9 +131,10 @@ $sendLocationButton.addEventListener('click', () => {
   });
 });
 
+// Upon joining chat room emit join
 socket.emit('join', { username, room }, (error) => {
   if (error) {
     alert(error);
-    location.href = '/';
+    location.href = '/'; // go back to home pg
   }
 });
